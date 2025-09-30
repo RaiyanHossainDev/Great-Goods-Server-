@@ -14,15 +14,15 @@ const authSchema = new mongoose.Schema({
         required:true,
     },
     phone:{
-        type:String,
-        required:true,
+        type:Number,
+        default:null,
     },
-    gender:{
+    address:{
         type:String,
-        required:true,
+        default:null,
     },
     code:{
-        type:Number,
+        type:String,
         default:null,
     },
     codeTimeOut:{
@@ -33,10 +33,11 @@ const authSchema = new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    avatar:{
+    role:{
         type:String,
-        required:true,
-    },
+        default:"user",
+        enum:["client","admin","staff"]
+    }
 },{ timestamps: true })
 
 module.exports = mongoose.model("user", authSchema)

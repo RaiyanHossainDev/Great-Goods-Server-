@@ -14,7 +14,7 @@ const timeGenerator = (after)=>{
 
 const randomCharsGen = (length = 8) => {
   const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   
   let code = "";
   for (let i = 0; i < length; i++) {

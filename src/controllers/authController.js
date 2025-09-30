@@ -15,35 +15,24 @@ cloudinary.config({
 })
 
 // ======================= Register Controller
-/**
- * Registers a new user.
- * Validates input, hashes password, saves user, and sends verification email.
- */
 const register = async (req, res) => {
     try {
-        const { username, email, phone, gender, password } = req.body;
-        let avatar = '';
+        const { username, email, password, phone, address,  role } = req.body;
         const code = randomCharsGen();
         const otpTimeOut = timeGenerator(4);
 
         // Validate required fields
-        if (!username || !email || !phone || !gender || !password)
+        if (!username || !email || !password || !role)
             return res.status(404).send("items not found");
 
         // Validate formats
-        if (!phoneRegex.test(phone) || !passwordRegex.test(password) || !emailRegex.test(email))
+        if (!passwordRegex.test(password) || !emailRegex.test(email))
             return res.status(400).send("invalid items");
 
         // Check for existing user
         const checkUser = await authModel.findOne({ email: email });
         if (checkUser)
             return res.status(400).send("email already used");
-
-        // Assign default avatar based on gender
-        if (gender === 'male')
-            avatar = "https://www.svgrepo.com/show/382109/male-avatar-boy-face-man-user-7.svg";
-        if (gender === 'female')
-            avatar = "https://www.clipartmax.com/png/middle/121-1214390_female-avatar-female-avatar.png";
 
         // Hash password
         const hashedPass = await bcrypt.hash(password, 10);
@@ -54,10 +43,10 @@ const register = async (req, res) => {
             password: hashedPass,
             email,
             phone,
-            gender,
-            avatar,
+            address,
+            role,
             code,
-            codeTimeOut: otpTimeOut
+            codeTimeOut: otpTimeOut,
         });
 
         // Save user to database
@@ -73,10 +62,6 @@ const register = async (req, res) => {
 };
 
 // ======================= OTP verification Controller
-/**
- * Verifies user's email using code from verification link.
- * If code is valid and not expired, activates account.
- */
 const linkVerification = async (req, res) => {
     const { code } = req.params;
 
@@ -179,16 +164,14 @@ const login = async (req, res) => {
     const loginInfo = {
         username: user.username,
         email: user.email,
-        phone: user.phone,
-        gender: user.gender,
-        avatar: user.avatar,
+        role: user.role,
         id: user._id,
     }
 
-    const token = jwt.sign({ data: email}, process.env.jwt_secret, { expiresIn: '3h' });
+    const token = jwt.sign({ email: email, role:user.role}, process.env.jwt_secret, { expiresIn: '3h' });
 
 
-    res.status(200).send({msg:"login successful", loginInfo:loginInfo , token:token});
+    res.status(200).send({loginInfo:loginInfo , token:token});
 }
 
 module.exports = { register, linkVerification, resendLink, login }

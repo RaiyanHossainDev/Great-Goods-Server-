@@ -6,7 +6,7 @@ const jwtMiddleware = (req, res, next) => {
         console.log(err);
         if (err) return res.status(401).send("unauthorized access");
         next();
-        req.user = decoded.data;
+        req.user = decoded;
     });
 }
 
