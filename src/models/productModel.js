@@ -9,7 +9,7 @@ const Schema = new mongoose.Schema({
     subImages:{type:Array, default:[]},
     productPrice:{type:String, required:true},
     review:[{
-        reviewer:{type:String,default:null},
+        reviewer:{type:mongoose.Schema.ObjectId,default:null, ref:"user"},
         comment:{type:String,default:null},
         rating:{type:String,default:null},
         date:{type:Date,default:null},

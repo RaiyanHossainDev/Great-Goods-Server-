@@ -1,9 +1,10 @@
 const accessors = (accessor) => {
-    return (req,res,next) => {
-                console.log(req.user);
-                res.status(200).send("this is role checker");
-            }
-    
+    return (req, res, next) => {
+        if(accessor.includes(req.user.role)){
+            next();
+        }else{
+            res.status(403).send("access denied")
+        }
+    }
 }
-
 module.exports = accessors;

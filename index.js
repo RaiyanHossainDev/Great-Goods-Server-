@@ -12,7 +12,7 @@ const port = 8000
 // ======================= middlewares
 app.use(express.json())
 app.use(cors())
-app.use(route)
+app.use(route) 
 db()
 
 // ======================= running server

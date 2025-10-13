@@ -24,4 +24,16 @@ const randomCharsGen = (length = 8) => {
   return code;
 };
 
-module.exports = {randomNum,timeGenerator,randomCharsGen}
+function toSlug(text) {
+    // Convert to lowercase
+    let slug = text.toLowerCase();
+    // Replace spaces and non-alphanumeric characters with hyphens
+    slug = slug.replace(/[^a-z0-9]+/g, '-');
+    // Remove leading/trailing hyphens
+    slug = slug.replace(/^-+|-+$/g, '');
+    // Generate 4 random digits
+    const digits = Math.floor(1000 + Math.random() * 9000);
+    // Combine slug and digits
+    return `${slug}-${digits}`;
+}
+module.exports = {randomNum,timeGenerator,randomCharsGen,toSlug}
