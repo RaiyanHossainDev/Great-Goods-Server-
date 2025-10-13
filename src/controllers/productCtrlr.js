@@ -225,5 +225,15 @@ const giveReview = async (req,res) => {
 
     res.status(200).send("review added")   
 }
+// ================= Get Product Details ==================
+const getSingleProduct = async (req,res) => {
+    const {slug} = req.params;
+    if(!slug) return res.status(400).send("slug is required");
+
+    const product = await productModel.findOne({slug}).populate("productCategory").populate("review.reviewer", "username email");
+    if(!product) return res.status(404).send("product not found");
+
+    res.status(200).send(product);
+}
 // ==================================================
-module.exports = {addCategory , addProduct , updateProduct, adminApproval, giveReview};
+module.exports = {addCategory , addProduct , updateProduct, adminApproval, giveReview, getSingleProduct};
