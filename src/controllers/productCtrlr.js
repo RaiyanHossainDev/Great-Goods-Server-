@@ -235,5 +235,45 @@ const getSingleProduct = async (req,res) => {
 
     res.status(200).send(product);
 }
+// ================= Get All Products ==================
+const getAllProducts = async (req,res) => {
+    let {searchKey,limit,pageNo} = req.query;
+    let isPrev,isNext = false;
+    // ================================================
+    limit = limit || 4;
+    pageNo = pageNo || 1;
+    const keyRegex = new RegExp(searchKey, 'i');
+    const skip = (pageNo - 1) * limit;
+    // ================================================
+    const products = await productModel.countDocuments({productName:{$regex:keyRegex}});
+    const pageNumber = Math.ceil(products/limit);
+    pageNumber > pageNo ? isNext = true : isNext = false;
+    pageNo > 1 ? isPrev = true : isPrev = false;
+
+    const refiendProducts = await productModel.find({productName:{$regex:keyRegex}}).populate("review.reviewer", "username email").limit(limit).skip(skip);
+    res.status(200).send({products:refiendProducts,currentPage:pageNo,isPrev,isNext,totalPages:pageNumber,limit,});    
+}
+// =============================== Delete Product ==================
+const deleteProduct = async (req,res) => {
+    const {id } = req.body;
+    if(!id) return res.status(400).send("product id is required");
+
+    const product = await productModel.findById(id);
+    if(!product) return res.status(404).send("product not found");
+    // ====== deleting images from cloudinary ======
+    const mainImageLocation = product.thumbnailImage.split("/").slice(7).join("/").split(".")[0];
+    await cloudinary.uploader.destroy(mainImageLocation);
+
+    Promise.all(
+        product.subImages.map( async (img) => {
+            const imageLocation = img.split("/").slice(7).join("/").split(".")[0];
+            await cloudinary.uploader.destroy(imageLocation);
+        })
+    )
+    // ====== deleting product from database ======
+    await productModel.findByIdAndDelete(id);
+
+    res.status(200).send("product deleted")
+}
 // ==================================================
-module.exports = {addCategory , addProduct , updateProduct, adminApproval, giveReview, getSingleProduct};
+module.exports = {addCategory , addProduct , updateProduct, adminApproval, giveReview, getSingleProduct, getAllProducts, deleteProduct};

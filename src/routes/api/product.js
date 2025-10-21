@@ -1,5 +1,5 @@
 const express = require('express');
-const { addCategory, addProduct, updateProduct, adminApproval, giveReview, getSingleProduct } = require('../../controllers/productCtrlr');
+const { addCategory, addProduct, updateProduct, adminApproval, giveReview, getSingleProduct, getAllProducts, deleteProduct } = require('../../controllers/productCtrlr');
 const jwtMiddleware = require('../../middlewares/jwt');
 const accessors = require('../../middlewares/accessors');
 const productRouter = express.Router();
@@ -13,5 +13,7 @@ productRouter.post("/updateProduct", jwtMiddleware , accessors(["staff","admin"]
 productRouter.post("/adminApproval", jwtMiddleware , accessors(["admin"]), adminApproval)
 productRouter.post("/giveReview", jwtMiddleware , accessors(["user","admin","staff"]), giveReview)
 productRouter.post("/getSingleProduct/:slug", getSingleProduct)
+productRouter.get("/getAllProduct", getAllProducts)
+productRouter.delete("/deleteProduct", jwtMiddleware , accessors(["admin"]), deleteProduct)
 
 module.exports = productRouter;

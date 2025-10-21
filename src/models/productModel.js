@@ -18,7 +18,7 @@ const Schema = new mongoose.Schema({
     discountPrice:{type:Number, default:null},
     discountPercentage:{type:String, default:null},
     slug:{type:String, required:true, unique:true},
-    productCategory:{type:mongoose.Schema.ObjectId, required:true, ref:"category"},
+    productCategory:{type:String, required:true},
     stock:{type:String, required:true},
     varient:[
         {

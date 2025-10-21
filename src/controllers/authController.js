@@ -121,7 +121,7 @@ const linkVerification = async (req, res) => {
         `);
     }
 };
-
+// ======================= Resend verification link Controller
 const resendLink = async (req,res) => {
     const {email} = req.body;
     const code = randomCharsGen();
@@ -144,8 +144,7 @@ const resendLink = async (req,res) => {
     res.status(200).send("verification link sent");
 
 }
-
-
+// ======================= Login Controller
 const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -173,5 +172,16 @@ const login = async (req, res) => {
 
     res.status(200).send({loginInfo:loginInfo , token:token});
 }
+// ======================= Get Current User Controller
+const getCurrentUser = async (req, res) => {
+    // const email = req.user.email;
 
-module.exports = { register, linkVerification, resendLink, login }
+    // const user = await authModel.findOne({email}).select('-password -code -codeTimeOut');
+    // if (!user) return res.status(404).send("user not found");
+
+    // res.status(200).send(user);
+
+    res.send("ok")
+}
+// ======================= Export Controllers
+module.exports = { register, linkVerification, resendLink, login, getCurrentUser };
