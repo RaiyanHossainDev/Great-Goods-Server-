@@ -10,11 +10,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailer = async (email,template) => {
+const mailer = async (email,subject,template) => {
   const info = await transporter.sendMail({
     from: "Voyager",
     to: email,
-    subject: "Email Verification",
+    subject: subject,
     text: "",
     html: template, // HTML body
   });

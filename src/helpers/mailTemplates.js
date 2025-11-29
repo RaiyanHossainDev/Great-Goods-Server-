@@ -95,5 +95,155 @@ const linkVerifyTemplates = (username,email,link)=>(`
 
 `)
 
+const purchaseDetailsTemplate = (orderId,orderDate,name,address,items,total,subTotal,shippingCost,discount)=>(`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Summary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f6ff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 0;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(90deg, #1e3c72, #2a5298);
+      color: #ffffff;
+      padding: 30px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .header p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .order-summary h2 {
+      color: #2c5879;
+      border-bottom: 2px solid #1e90ff;
+      padding-bottom: 8px;
+    }
+    .order-info {
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #1b3a57;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dddddd;
+      padding: 10px 0;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      color: #1b3a57;
+    }
+    .delivery-info {
+      background-color: #eaf3ff;
+      border-left: 4px solid #1e90ff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 25px;
+      color: #1b3a57;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f0f6ff;
+      color: #888888;
+      font-size: 12px;
+      border-top: 1px solid #dddddd;
+      border-radius: 0 0 8px 8px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin-top: 20px;
+      background-color: #1e90ff;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Thank You for Your Purchase!</h1>
+      <p>Order #${orderId}</p>
+    </div>
 
-module.exports = {linkVerifyTemplates}
+    <div class="content">
+      <div class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="order-info">
+          <p><strong>Order Date:</strong> ${orderDate}</p>
+        </div>
+        ${
+          items.map(item => (`
+            <div class="item">
+              <span>${item.productId.productName} (Qty: ${item.qty}) <b>:</b> </span>
+              <span> $${item.productId.discountPrice || item.productId.productPrice}</span>
+            </div>
+          `))
+        }
+        <div class="subtotal" style="display:flex; justify-content:space-between; margin-top:15px;">
+        <span>Subtotal <b>:</b> </span>
+        <span> $${subTotal}</span>
+      </div>
+      <div class="shipping" style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>Shipping <b>:</b> </span>
+        <span> $${shippingCost}</span>
+      </div>
+      <div class="discount" style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>Coupon Discount <b>:</b> </span>
+        <span> -$${discount}</span>
+      </div>
+      <div class="total" style="font-weight:bold; display:flex; justify-content:space-between; margin-top:15px;">
+        <span>Total <b>:</b> </span>
+        <span> $${total}</span>
+      </div>
+      </div>
+
+      <div class="delivery-info">
+        <h3>Delivery Information</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Address:</strong> ${address}</p>
+      </div>
+
+      <a href="https://yourwebsite.com" class="btn">View Your Order</a>
+    </div>
+
+    <div class="footer">
+      <p>If you have any questions, reply to this email or contact us at support@yourwebsite.com</p>
+      <p>© 2025 Your Company Name. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+
+`)
+
+
+module.exports = {linkVerifyTemplates, purchaseDetailsTemplate}

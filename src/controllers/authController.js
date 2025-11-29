@@ -53,14 +53,13 @@ const register = async (req, res) => {
         await saveModel.save();
 
         // Send verification email
-        mailer(email, linkVerifyTemplates(username, email, `localhost:8000/auth/${code}`));
+        mailer(email,"Email Verification", linkVerifyTemplates(username, email, `localhost:8000/auth/${code}`));
         res.status(201).send("account created");
     } catch (error) {
         console.error("Register Error:", error);
         res.status(500).send("internal server error");
     }
 };
-
 // ======================= OTP verification Controller
 const linkVerification = async (req, res) => {
     const { code } = req.params;
@@ -139,7 +138,7 @@ const resendLink = async (req,res) => {
 
     await user.save();
     // Send verification email
-    mailer(email, linkVerifyTemplates(user.username, email, `localhost:8000/auth/${code}`));
+    mailer(email, "Email Verification" ,linkVerifyTemplates(user.username, email, `localhost:8000/auth/${code}`));
 
     res.status(200).send("verification link sent");
 
@@ -174,14 +173,48 @@ const login = async (req, res) => {
 }
 // ======================= Get Current User Controller
 const getCurrentUser = async (req, res) => {
-    // const email = req.user.email;
+    const email = req.user.email;
 
-    // const user = await authModel.findOne({email}).select('-password -code -codeTimeOut');
-    // if (!user) return res.status(404).send("user not found");
+    const user = await authModel.findOne({email}).select('-password -code -codeTimeOut');
+    if (!user) return res.status(404).send("user not found");
 
-    // res.status(200).send(user);
+    res.status(200).send(user);
+}
+// ======================= Change Staff to Admin Controller
+const changeStaffToAdmin = async (req, res) => {
+    const { userId } = req.body;
 
-    res.send("ok")
+    const user = await authModel.findOne({ _id: userId });
+    if (!user) return res.status(404).send("user not found");
+    if (user.role !== 'staff') return res.status(400).send("user is not staff");
+
+    user.role = 'admin';
+    await user.save();
+
+    res.status(200).send("Staff's role updated to admin");
+}
+// ======================= Delete Staff Account Controller
+const deleteStaffAcc = async (req, res) => {
+    const { userId } = req.body;
+
+    const user = await authModel.findOne({ _id: userId });
+    if (!user) return res.status(404).send("user not found");
+    if (user.role !== 'staff') return res.status(400).send("user is not staff");
+
+    await authModel.deleteOne({ _id: userId });
+
+    res.status(200).send("Staff account deleted");
+}
+// ======================= Delete Own Account Controller
+const deleteOwnAcc = async (req, res) => {
+    const { email } = req.user;
+
+    const user = await authModel.findOne({ email });
+    if (!user) return res.status(404).send("user not found");
+
+    await authModel.deleteOne({ email });
+
+    res.status(200).send("Account deleted");
 }
 // ======================= Export Controllers
-module.exports = { register, linkVerification, resendLink, login, getCurrentUser };
+module.exports = { register, linkVerification, resendLink, login, getCurrentUser, changeStaffToAdmin, deleteStaffAcc, deleteOwnAcc };
