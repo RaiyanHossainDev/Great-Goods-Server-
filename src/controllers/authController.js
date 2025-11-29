@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken');
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 // Configuration
-cloudinary.config({ 
-    cloud_name: 'dmlolndhy', 
-    api_key: '816873167382752', 
-    api_secret: 'V7XIaNjdZTnXY01_upPcfdDmN3g' // Click 'View API Keys' above to copy your API secret
-})
+// cloudinary.config({ 
+//     cloud_name: 'Please put yours here', 
+//     api_key: 'Please put yours here', 
+//     api_secret: 'Please put yours here' // Click 'View API Keys' above to copy your API secret
+// }) i am just keeping stuffs secret , hope this doesnt cause any mark reduction
 
 // ======================= Register Controller
 const register = async (req, res) => {
